@@ -1,0 +1,45 @@
+# ==============================================================================
+# Google Reviews Sentiment & Rating Evaluation (Laya 'score' task)
+# Dataset: talhaa/nlp-google-reviews-dataset
+# ==============================================================================
+
+model:
+  path: "models/laya"       # Local model checkpoint path
+  device: "cpu"
+
+dataset:
+  name: "talhaa/nlp-google-reviews-dataset"
+  subset: null
+  split: "train"            # Dataset contains only 'train' split
+  train_split: "train"
+  text_column: "review"     # Column containing the review text
+  label_column: "rating"    # Column containing star ratings (1 to 5)
+
+  # Maps 1-5 star ratings to 0-4 discrete ordinal levels for Laya 'score'
+  label_mapping:
+    1: 0  # 1-star -> Level 0
+    2: 1  # 2-star -> Level 1
+    3: 2  # 3-star -> Level 2
+    4: 3  # 4-star -> Level 3
+    5: 4  # 5-star -> Level 4
+
+evaluation:
+  samples: 10               # Number of reviews to evaluate (set null for all)
+  random_seed: 42
+  top_k_classes: null
+
+task:
+  type: "score"
+  question_id: "review_rating"
+  instructions: "Rate the customer sentiment and review rating on a scale from 0 (1-star, terrible) to 4 (5-star, excellent)."
+  
+  # Ordered criteria from Level 0 (1-star) to Level 4 (5-star)
+  criteria:
+    - "1-star: terrible, strongly negative, major complaints, completely unsatisfied"
+    - "2-star: poor, below expectations, negative experience with noticeable flaws"
+    - "3-star: average, neutral or mixed feedback with both good and bad points"
+    - "4-star: good, positive experience, pleased with the service or product"
+    - "5-star: excellent, strongly positive, outstanding service, highly recommended"
+
+export:
+  excel_path: "google_reviews_score_results.xlsx"

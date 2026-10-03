@@ -1,0 +1,33 @@
+# Example: Binary classification with Laya 'noul' question type on SST-2
+model:
+  path: "models/laya"
+  device: "cpu"
+
+dataset:
+  name: "SetFit/sst2"
+  subset: null
+  split: "validation"
+  train_split: "train"
+  text_column: "text"
+  label_column: "label"
+  label_mapping:
+    0: "negative"
+    1: "positive"
+
+evaluation:
+  samples: 5
+  random_seed: 42
+  top_k_classes: null
+
+task:
+  type: "noul"
+  question_id: "sentiment"
+  instructions: "Is this sentence expressing negative or critical sentiment?"
+  positive_labels: [0, "no", "0"]
+  threshold: 0.5
+  criteria:
+    false: "The sentence is positive or favorable"
+    true: "The sentence is negative or critical"
+
+export:
+  excel_path: "sst2_noul_results.xlsx"
